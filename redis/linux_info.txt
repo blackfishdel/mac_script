@@ -1,0 +1,27 @@
+139.196.139.156
+  Docker version 17.10.0-ce, build f4ffd25
+  docker-compose version 1.16.1, build 6d1ac21
+
+#docker swarm node 查看集群
+docker node ls
+
+#docker swarm node 查看当前 Swarm 集群运行的服务
+docker service ls
+
+#来查看某个服务的详情
+docker service ps [name]
+
+#来查看某个服务的日志
+docker service logs [name]
+
+#从 Swarm 集群删除某个服务
+docker service rm [name]
+
+
+#部署服务使用 docker stack deploy，其中 -c 参数指定 compose 文件名
+docker stack deploy -c docker-compose.yml wordpress
+#查看服务
+docker stack ls
+#移除服务
+docker stack down [name]
+#该命令不会移除服务所使用的数据卷，如果你想移除数据卷请使用 docker volume rm

@@ -1,0 +1,16 @@
+master:         #主服务
+  image: registry.docker-cn.com/library/redis:3-alpine
+slave:          #备份服务
+  image: registry.docker-cn.com/library/redis:3-alpine
+  command: redis-server --slaveof redis-master 6379
+  links:
+    - master:redis-master
+sentinel:       #Redis集群的监控管理工具
+  build: sentinel
+  environment:  #监听服务个数 2个 监听关机服务 5秒 监听故障转移 5秒
+    - SENTINEL_QUORUM=2
+    - SENTINEL_DOWN_AFTER=5000
+    - SENTINEL_FAILOVER=5000
+  links:
+    - master:redis-master
+    - slave

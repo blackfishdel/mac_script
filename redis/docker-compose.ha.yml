@@ -1,0 +1,60 @@
+version: '3'
+services:
+
+  redis_master:
+    image: registry.docker-cn.com/library/redis:3-alpine
+    environment:
+      - affinity:service!=slave     #环境变量描述了服务的部署约束
+    labels:             #自定义redis标签 描述了服务的实例数量
+      redis.scale: "1"
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 2
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+    restart: always   #指定容器退出后的重启策略为始终重启。该命令对保持服务始终运行十分有效
+    sysctls:          #配置容器内核参数
+      - net.core.somaxconn=1024
+      - net.ipv4.tcp_syncookies=0
+    ulimits:          #指定容器的 ulimits 限制值,不能超过硬限制
+      nproc: 65535
+      nofile:
+        soft: 20000
+        hard: 40000
+
+  redis_slave:
+    image: registry.docker-cn.com/library/redis:3-alpine
+    command: redis-server --slaveof redis-master 6379
+    environment:
+      - affinity:service!=master    #环境变量描述了服务的部署约束
+      - affinity:service!=slave     #环境变量描述了服务的部署约束
+    labels:             #自定义redis标签 描述了服务的实例数量
+      redis.scale: "2"
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 2
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+    links:
+      - master:redis-master
+
+  redis_sentinel:
+    build: sentinel
+    environment:
+      - affinity:service!=sentinel
+    labels:             #自定义redis标签 描述了服务的实例数量
+      redis.scale: "3"
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 2
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+    links:
+      - master:redis-master
+      - slave
