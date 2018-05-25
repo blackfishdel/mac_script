@@ -1,5 +1,10 @@
 # redis-cluster
 
+运行目标 | OS version | Docker version | docker-compose version |
+--- | --- | --- | --- | ---
+CI server | Ubuntu 16.04.2 LTS | Docker version 17.10.0-ce, build f4ffd25 | docker-compose version 1.16.1, build 6d1ac21
+local server | MacOS 10.13.4 (17E199) | Docker version 18.03.1-ce, build 9ee9f40 | docker-compose version 1.21.1, build 5a3f1a3
+
 Redis集群目标
 
 Redis集群是Redis的一个分布式实现，具有以下目标，按照设计中的重要性排序：
