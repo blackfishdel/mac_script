@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+
+  master:
+    image: registry.int.mimikko.cn/redis-master:${TAG:-latest}
+    deploy:
+      replicas: 2
+    networks:
+      - redis
+
+networks:
+  redis:
+    external: true

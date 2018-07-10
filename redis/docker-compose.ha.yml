@@ -40,7 +40,7 @@ services:
       restart_policy:
         condition: on-failure
     links:
-      - master:redis-master
+      - master:redis_master
 
   redis_sentinel:
     build: sentinel
@@ -56,5 +56,5 @@ services:
       restart_policy:
         condition: on-failure
     links:
-      - master:redis-master
+      - master:redis_master
       - slave
